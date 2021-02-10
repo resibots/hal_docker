@@ -30,6 +30,9 @@ def make_docker_script(args, input_script, output_script, verbose):
     if verbose:
         s = 'set -x;'
     for l in open(input_script):
+        if '#' in l:
+            print("ERROR: comments are not allowed in scripts!")
+            sys.exit(1)
         s += l[0:-1] + ';'
     script += "docker exec $DOCKER_ID /bin/bash -c \'{}\' & \n".format(s)
 
@@ -75,8 +78,6 @@ def parse_args():
 
 ### main logic
 args, parser = parse_args()
-
-print("WARNING: comments are not allowd in scripts")
 
 if args.kill:
     run("oardel -s SIGTERM " + args.kill, args.verbose)
