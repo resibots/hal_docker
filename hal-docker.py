@@ -79,7 +79,6 @@ print("WARNING: comments are not allowd in scripts")
 
 if args.kill:
     run("oardel -s SIGTERM " + args.kill, args.verbose)
-    parser.print_help()
     sys.exit(0)
 
 if not args.image:
@@ -87,7 +86,7 @@ if not args.image:
     parser.print_help()
     sys.exit(1)
 
-if not args.directory:
+if not args.dir:
     print("ERROR: please specify a directory to be mounted in the image as /host!")
     parser.print_help()
     sys.exit(1)
