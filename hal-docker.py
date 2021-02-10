@@ -2,6 +2,7 @@
 import argparse
 import subprocess
 import sys,os
+import random
 
 # wrap a script in the docker environment and put it in output_script
 # if no input script, uses args.cmd
@@ -25,7 +26,7 @@ def make_docker_script(args, input_script, output_script, verbose):
 
     script += 'trap\n'
 
-    s = ''
+    s = 'RAND=' + str(random.randint(1, 10000)) + ';'
     if verbose:
         s = 'set -x;'
     for l in open(input_script):

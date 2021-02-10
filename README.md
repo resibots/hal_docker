@@ -15,10 +15,11 @@ hal-docker.py --image registry.gitlab.inria.fr/locolearn/public/docker_inria_wbc
 Please note that it is your responsibility to make it sure that the replicates do not overwrite their output files (as they are running concurently). For instance, in your script:
 
 ```
-FILE=/host/data/test_result_talos-`date +%m-%d-%H-%M-%S`.dat
+FILE=/host/data/test_result_talos-`date +%m-%d-%H-%M-%S`-$RAND.dat
 cd tests
 ./test_behaviors_talos > $FILE
 ```
+$RAND is filled by our system to give you a random number between 1 and 10000.
 
 You can create directories using the same principle.
 
