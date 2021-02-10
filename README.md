@@ -57,7 +57,7 @@ optional arguments:
   -r REPLICATES, --replicates REPLICATES
                         number of replicates
   -R RESULT_DIR, --result_dir RESULT_DIR
-                        set $DIR in your execution script
+                        set $RESULT_DIR in your execution script
   -S SCRIPT, --script SCRIPT
                         script to compile and run
   -s, --submit          submit the job to OAR
