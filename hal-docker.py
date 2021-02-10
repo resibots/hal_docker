@@ -10,7 +10,7 @@ def make_docker_script(args, input_script, output_script, verbose):
     script = ''
     if (verbose):
         script += 'set -x\n'
-    script += "DOCKER_ID=`docker run -t --user=user -w /home/user  --privileged=true -d -v {}:/host {} /bin/bash`\n".format(args.dir, args.image)
+    script += "DOCKER_ID=`docker run -t --user=user -w /home/user -v /dev/urandom:/dev/random --privileged=true -d -v {}:/host {} /bin/bash`\n".format(args.dir, args.image)
 
     if args.verbose:
         script += "docker ps\n"
@@ -99,7 +99,7 @@ if not args.cmd and not args.script and not args.compile:
 pwd = os.environ['HOME'] + '/tmp/'
 if not os.path.exists(pwd):
     os.mkdir(pwd)
-    
+
 if args.compile:
     s = make_docker_script(args, args.compile, pwd + "compile.sh", args.verbose)
     run("/bin/bash " + s, args.verbose)
