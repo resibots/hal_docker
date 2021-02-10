@@ -58,7 +58,7 @@ def parse_args():
     parser.add_argument("-c", "--cmd", help="command to run", type=str)
     parser.add_argument("-C", "--compile", help="compilation script", type=str)
     parser.add_argument("-d", "--dir", help="directory to be mounted as /host", type=str)
-    parser.add_argument("-i", "--image", help="DOCKER image",  required=True)
+    parser.add_argument("-i", "--image", help="DOCKER image")
     parser.add_argument("-k", "--kill", help="kill a job [--kill job_number]", type=str)
     parser.add_argument("-n", "--cores", help="number of cores for OAR [use 24 for a full node, 32 for the 'fat nodes']", type=str, default="1")
     parser.add_argument("-r", "--replicates", help="number of replicates", type=int, default=1)
@@ -68,30 +68,33 @@ def parse_args():
     parser.add_argument("-w", "--walltime", help="walltime for the OAR job (warning the job will be killed after this time)", type=str, default="24:00")
 
     args = parser.parse_args()
-    return args
+    return args, parser
 
 
 
 ### main logic
-args = parse_args()
+args, parser = parse_args()
 
 print("WARNING: comments are not allowd in scripts")
 
 if args.kill:
     run("oardel -s SIGTERM " + args.kill, args.verbose)
+    parser.print_help()
     sys.exit(0)
 
 if not args.image:
     print("ERROR: we need a docker image!")
+    parser.print_help()
     sys.exit(1)
 
 if not args.directory:
     print("ERROR: please specify a directory to be mounted in the image as /host!")
+    parser.print_help()
     sys.exit(1)
-
 
 if not args.cmd and not args.script and not args.compile:
     print("ERROR: we need a command or a script!")
+    parser.print_help()
     sys.exit(1)
 
 pwd = os.environ['HOME'] + '/tmp/'
