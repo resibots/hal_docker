@@ -15,7 +15,8 @@ hal-docker.py --image registry.gitlab.inria.fr/locolearn/public/docker_inria_wbc
 Please note that it is your responsibility to make it sure that the replicates do not overwrite their output files (as they are running concurently). For instance, in your script:
 
 ```
-FILE=/host/data/test_result_talos-`date +%m-%d-%H-%M-%S`-$RAND.dat
+mkdir /host/data/$RESULT_DIR
+FILE=/host/data/$RESULT_DIR/test_result_talos-`date +%m-%d-%H-%M-%S`-$RAND.dat
 cd tests
 ./test_behaviors_talos > $FILE
 ```
@@ -33,24 +34,30 @@ hal-docker.py --kill  745342
 
 ## Help
 ```
-usage: hal-docker.py [-h] [-c CMD] [-C COMPILE] [-d DIR] -i IMAGE [-k KILL]
-                     [-n CORES] [-r REPLICATES] [-S SCRIPT] [-s] [-v]
+usage: hal-docker.py [-h] [-a ARGS [ARGS ...]] [-c CMD] [-C COMPILE] [-d DIR]
+                     [-i IMAGE] [-k KILL [KILL ...]] [-n CORES]
+                     [-r REPLICATES] [-R RESULT_DIR] [-S SCRIPT] [-s] [-v]
                      [-w WALLTIME]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -a ARGS [ARGS ...], --args ARGS [ARGS ...]
+                        arguments to the run script
   -c CMD, --cmd CMD     command to run
   -C COMPILE, --compile COMPILE
                         compilation script
   -d DIR, --dir DIR     directory to be mounted as /host
   -i IMAGE, --image IMAGE
                         DOCKER image
-  -k KILL, --kill KILL  kill a job [--kill job_number]
+  -k KILL [KILL ...], --kill KILL [KILL ...]
+                        kill a job [--kill job_number]
   -n CORES, --cores CORES
                         number of cores for OAR [use 24 for a full node, 32
                         for the 'fat nodes']
   -r REPLICATES, --replicates REPLICATES
                         number of replicates
+  -R RESULT_DIR, --result_dir RESULT_DIR
+                        set $DIR in your execution script
   -S SCRIPT, --script SCRIPT
                         script to compile and run
   -s, --submit          submit the job to OAR

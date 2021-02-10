@@ -32,6 +32,8 @@ def make_docker_script(args, input_script, output_script, verbose):
     s += 'RAND=' + str(random.randint(1, 10000)) + ';'
     if args.args:
         s += "ARGS=\"{}\";".format(" ".join(args.args))
+    if args.result_dir:
+        s += "RESULT_DIR=\"{}\";".format(args.result_dir)
 
     for l in open(input_script):
         if '#' in l:
@@ -65,11 +67,12 @@ def parse_args():
     parser.add_argument("-a", "--args", help="arguments to the run script", type=str, nargs='+')
     parser.add_argument("-c", "--cmd", help="command to run", type=str)
     parser.add_argument("-C", "--compile", help="compilation script", type=str)
-    parser.add_argument("-d", "--dir", help="directory to be mounted as /host", type=str)
+    parser.add_argument("-d", "--dir", help="directory to be mounted as /host", type=str, default="exp")
     parser.add_argument("-i", "--image", help="DOCKER image")
     parser.add_argument("-k", "--kill", help="kill a job [--kill job_number]", type=str, nargs='+')
     parser.add_argument("-n", "--cores", help="number of cores for OAR [use 24 for a full node, 32 for the 'fat nodes']", type=str, default="1")
     parser.add_argument("-r", "--replicates", help="number of replicates", type=int, default=1)
+    parser.add_argument("-R", "--result_dir", help="set $DIR in your execution script", type=str)
     parser.add_argument("-S", "--script", help="script to compile and run", type=str)
     parser.add_argument("-s", "--submit", help="submit the job to OAR", action="store_true")
     parser.add_argument("-v", "--verbose", help="print more information", action="store_true")
