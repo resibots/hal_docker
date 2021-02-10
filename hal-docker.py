@@ -85,6 +85,11 @@ if not args.image:
     print("ERROR: we need a docker image!")
     sys.exit(1)
 
+if not args.directory:
+    print("ERROR: please specify a directory to be mounted in the image as /host!")
+    sys.exit(1)
+
+
 if not args.cmd and not args.script and not args.compile:
     print("ERROR: we need a command or a script!")
     sys.exit(1)
