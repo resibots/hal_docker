@@ -26,9 +26,13 @@ def make_docker_script(args, input_script, output_script, verbose):
 
     script += 'trap\n'
 
-    s = 'RAND=' + str(random.randint(1, 10000)) + ';'
+    s = ''
     if verbose:
         s = 'set -x;'
+    s += 'RAND=' + str(random.randint(1, 10000)) + ';'
+    if args.args:
+        s += "ARGS=\"{}\";".format(" ".join(args.args))
+
     for l in open(input_script):
         if '#' in l:
             print("ERROR: comments are not allowed in scripts!")
@@ -58,7 +62,7 @@ def run(cmd, verbose):
 def parse_args():
     # setup arguments
     parser = argparse.ArgumentParser()
-
+    parser.add_argument("-a", "--args", help="arguments to the run script", type=str, nargs='+')
     parser.add_argument("-c", "--cmd", help="command to run", type=str)
     parser.add_argument("-C", "--compile", help="compilation script", type=str)
     parser.add_argument("-d", "--dir", help="directory to be mounted as /host", type=str)
