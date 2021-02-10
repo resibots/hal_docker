@@ -97,6 +97,9 @@ if not args.cmd and not args.script and not args.compile:
     sys.exit(1)
 
 pwd = os.environ['HOME'] + '/tmp/'
+if not os.path.exists(pwd):
+    os.mkdir(pwd)
+    
 if args.compile:
     s = make_docker_script(args, args.compile, pwd + "compile.sh", args.verbose)
     run("/bin/bash " + s, args.verbose)
