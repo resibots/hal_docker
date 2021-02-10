@@ -33,7 +33,7 @@ def make_docker_script(args, input_script, output_script, verbose):
         if '#' in l:
             print("ERROR: comments are not allowed in scripts!")
             sys.exit(1)
-        s += l[0:-1] + ';'
+        s += l.replace('\n', '') + ';'
     script += "docker exec $DOCKER_ID /bin/bash -c \'{}\' & \n".format(s)
 
     script += "CHILD=$!\n"
@@ -63,7 +63,7 @@ def parse_args():
     parser.add_argument("-C", "--compile", help="compilation script", type=str)
     parser.add_argument("-d", "--dir", help="directory to be mounted as /host", type=str)
     parser.add_argument("-i", "--image", help="DOCKER image")
-    parser.add_argument("-k", "--kill", help="kill a job [--kill job_number]", type=str)
+    parser.add_argument("-k", "--kill", help="kill a job [--kill job_number]", type=str, nargs='+')
     parser.add_argument("-n", "--cores", help="number of cores for OAR [use 24 for a full node, 32 for the 'fat nodes']", type=str, default="1")
     parser.add_argument("-r", "--replicates", help="number of replicates", type=int, default=1)
     parser.add_argument("-S", "--script", help="script to compile and run", type=str)
@@ -80,7 +80,7 @@ def parse_args():
 args, parser = parse_args()
 
 if args.kill:
-    run("oardel -s SIGTERM " + args.kill, args.verbose)
+    run("oardel -s SIGTERM " + ' '.join(args.kill), args.verbose)
     sys.exit(0)
 
 if not args.image:
