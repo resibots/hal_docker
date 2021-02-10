@@ -72,7 +72,7 @@ def parse_args():
     parser.add_argument("-k", "--kill", help="kill a job [--kill job_number]", type=str, nargs='+')
     parser.add_argument("-n", "--cores", help="number of cores for OAR [use 24 for a full node, 32 for the 'fat nodes']", type=str, default="1")
     parser.add_argument("-r", "--replicates", help="number of replicates", type=int, default=1)
-    parser.add_argument("-R", "--result_dir", help="set $DIR in your execution script", type=str)
+    parser.add_argument("-R", "--result_dir", help="set $RESULT_DIR in your execution script", type=str)
     parser.add_argument("-S", "--script", help="script to compile and run", type=str)
     parser.add_argument("-s", "--submit", help="submit the job to OAR", action="store_true")
     parser.add_argument("-v", "--verbose", help="print more information", action="store_true")
