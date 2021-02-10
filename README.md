@@ -9,7 +9,7 @@ hal-docker.py --image registry.gitlab.inria.fr/locolearn/public/docker_inria_wbc
 
 ### Compile and submit with 6 replicates
 ```
-hal-docker.py --image registry.gitlab.inria.fr/locolearn/public/docker_inria_wbc/inria_wbc:latest  --compile examples/compile.sh  --script examples/test_script.sh --dir /nfs/hal01/jmouret --submit --replicates 6
+hal-docker.py --image registry.gitlab.inria.fr/locolearn/public/docker_inria_wbc/inria_wbc:latest  --compile examples/compile.sh  --script examples/test_script.sh --dir /nfs/hal01/jmouret --submit --replicates 6 --cores 24
 ```
 
 Please note that it is your responsibility to make it sure that the replicates do not overwrite their output files (as they are running concurently). For instance, in your script:
