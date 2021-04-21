@@ -12,7 +12,7 @@ def make_docker_script(args, uid, gid, input_script, output_script, verbose):
     if (verbose):
         script += 'set -x\n'
     
-    script += "DOCKER_ID=`docker run -t --user={} -u ".format(args.user) + str(uid) + ":" + str(gid) + " -w /home/{} -v /dev/urandom:/dev/random --privileged -d -v {}:/host:rw {}`\n".format(args.user, args.dir, args.image)
+    script += "DOCKER_ID=`docker run -t -u " + str(uid) + ":" + str(gid) + " -w /home/{} -v /dev/urandom:/dev/random --privileged -d -v {}:/host:rw {}`\n".format(args.user, args.dir, args.image)
 
 
     if args.verbose:
