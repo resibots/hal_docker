@@ -6,12 +6,14 @@ import random
 
 # wrap a script in the docker environment and put it in output_script
 # if no input script, uses args.cmd
-def make_docker_script(args, input_script, output_script, verbose):
+def make_docker_script(args, uid, gid, input_script, output_script, verbose):
     # start (run) the docker image
     script = ''
     if (verbose):
         script += 'set -x\n'
-    script += "DOCKER_ID=`docker run -t --user=user -w /home/user -v /dev/urandom:/dev/random --privileged=true -d -v {}:/host {} /bin/bash`\n".format(args.dir, args.image)
+    
+    script += "DOCKER_ID=`docker run -t --user={} -u ".format(args.user) + str(uid) + ":" + str(gid) + " -w /home/{} -v /dev/urandom:/dev/random --privileged -d -v {}:/host:rw {}`\n".format(args.user, args.dir, args.image)
+
 
     if args.verbose:
         script += "docker ps\n"
@@ -75,6 +77,7 @@ def parse_args():
     parser.add_argument("-R", "--result_dir", help="set $RESULT_DIR in your execution script", type=str)
     parser.add_argument("-S", "--script", help="script to compile and run", type=str)
     parser.add_argument("-s", "--submit", help="submit the job to OAR", action="store_true")
+    parser.add_argument("-u", "--user", help="user name to connect to in the docker", type=str, default="user")
     parser.add_argument("-v", "--verbose", help="print more information", action="store_true")
     parser.add_argument("-w", "--walltime", help="walltime for the OAR job (warning the job will be killed after this time)", type=str, default="24:00")
 
@@ -85,6 +88,9 @@ def parse_args():
 
 ### main logic
 args, parser = parse_args()
+
+uid = os.getuid()
+gid = os.getgid()
 
 if args.kill:
     run("oardel -s SIGTERM " + ' '.join(args.kill), args.verbose)
@@ -110,23 +116,23 @@ if not os.path.exists(pwd):
     os.mkdir(pwd)
 
 if args.compile:
-    s = make_docker_script(args, args.compile, pwd + "compile.sh", args.verbose)
+    s = make_docker_script(args, uid, gid, args.compile, pwd + "compile.sh", args.verbose)
     run("/bin/bash " + s, args.verbose)
 
 if args.cmd:
     with open(pwd + "cmd.sh", 'w') as f:
         f.write(args.cmd + "\n")
-    s = make_docker_script(args, pwd + "cmd.sh", pwd + "cmd.sh", args.verbose)
+    s = make_docker_script(args, uid, gid, pwd + "cmd.sh", pwd + "cmd.sh", args.verbose)
     run("/bin/bash " + s, args.verbose)
 
 if args.script and not args.submit:
     print("script:", args.script)
-    s = make_docker_script(args, args.script, pwd + "script.sh", args.verbose)
+    s = make_docker_script(args, uid, gid, args.script, pwd + "script.sh", args.verbose)
     run("/bin/bash " + s, args.verbose)
 
 if args.script and args.submit:
     oarsub_args = "-l/nodes=1/core={},walltime={}".format(args.cores, args.walltime)
-    s = make_docker_script(args, args.script, pwd + "script.sh", args.verbose)
+    s = make_docker_script(args, uid, gid, args.script, pwd + "script.sh", args.verbose)
     cmd = "oarsub " + oarsub_args + " \"/bin/bash " + s + "\""
     for i in range(0, args.replicates):
         run(cmd, args.verbose)

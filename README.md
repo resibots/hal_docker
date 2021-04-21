@@ -1,6 +1,19 @@
 # HAL::docker
 Tool to run binaries in a docker image on the HAL cluster (OAR based)
 
+## Permissions
+
+In order to be able to write in the shared /host folder (see --dir option) the script gives to your docker container your uid and gid.
+
+Hence you won't be able to modify the container content but you can still use the already installed libraries
+
+If you want to install another version of one of the library you need to follow the compile_autotune.sh script example.
+
+The principle is to install yout librairy inside the /host folder and to give your project the correct library paths 
+You also need to change the `LD_LIBRARY_PATH` and `PATH` accordingly
+See `compile_autotune.sh` and `run_autotune.sh`
+
+
 ## Examples
 ### Compile and run in the docker 
 ```
